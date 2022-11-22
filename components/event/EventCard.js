@@ -8,13 +8,13 @@ const EventCard = ({
   date,
   time,
 }) => (
-    <Card className="text-center">
-      <Card.Header>{game}</Card.Header>
-      <Card.Body>
+  <Card className="text-center">
+    <Card.Header>{game}</Card.Header>
+    <Card.Body>
       <Card.Subtitle>{date}: {time}</Card.Subtitle>
       <Card.Text>{description}</Card.Text>
     </Card.Body>
-    </Card>
+  </Card>
 );
 
 EventCard.propTypes = {
