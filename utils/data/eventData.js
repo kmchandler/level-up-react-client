@@ -7,5 +7,11 @@ const getEvents= () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const createEvent = (event) => new Promise((resolve, reject) => {
+  fetch("", {})
+    .then()
+    .catch();
+});
+
 // eslint-disable-next-line import/prefer-default-export
-export { getEvents };
+export { getEvents, createEvent };
