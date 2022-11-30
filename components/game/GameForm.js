@@ -2,28 +2,35 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { createGame, getGameTypes } from '../../utils/data/gameData';
+import { createGame, getGameTypes, updateGame } from '../../utils/data/gameData';
 
-const GameForm = ({ user }) => {
+const GameForm = ({ user, gameObj }) => {
   const [gameTypes, setGameTypes] = useState([]);
-  /*
-  Since the input fields are bound to the values of
-  the properties of this state variable, you need to
-  provide some default values.
-  */
-  const [currentGame, setCurrentGame] = useState({
-    skillLevel: 1,
+  const initialState = {
+    id: '',
+    skill_level: 1,
     numberOfPlayers: 0,
     title: '',
     maker: '',
-    gameTypeId: 0,
-  });
+    game_type: 0,
+  };
+  const [currentGame, setCurrentGame] = useState(initialState);
   const router = useRouter();
 
   useEffect(() => {
     getGameTypes().then(setGameTypes);
-  }, []);
-
+    if (gameObj.id) {
+      setCurrentGame({
+        id: gameObj.id,
+        skill_level: gameObj.skill_level,
+        number_of_players: gameObj.number_of_players,
+        title: gameObj.title,
+        maker: gameObj.maker,
+        game_type: gameObj.game_type.id,
+      });
+    }
+  }, [gameObj]);
+  console.warn(currentGame, 'current game');
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCurrentGame((prevState) => ({
@@ -37,6 +44,7 @@ const GameForm = ({ user }) => {
     e.preventDefault();
 
     const game = {
+      id: currentGame.id,
       maker: currentGame.maker,
       title: currentGame.title,
       number_of_players: Number(currentGame.numberOfPlayers),
@@ -45,8 +53,11 @@ const GameForm = ({ user }) => {
       user_id: user.uid,
     };
 
-    // Send POST request to your API
-    createGame(game).then(() => router.push('/games'));
+    if (gameObj.id) {
+      updateGame(game, gameObj.id).then(() => router.push('/games'));
+    } else {
+      createGame(game).then(() => router.push('/games'));
+    }
   };
 
   return (
@@ -92,6 +103,25 @@ GameForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  gameObj: PropTypes.shape({
+    id: PropTypes.number,
+    number_of_players: PropTypes.number,
+    skill_level: PropTypes.number,
+    title: PropTypes.string,
+    maker: PropTypes.string,
+    game_type: PropTypes.number,
+  }),
+};
+
+GameForm.defaultProps = {
+  gameObj: PropTypes.shape({
+    id: '',
+    number_of_players: '',
+    skill_level: '',
+    title: '',
+    maker: '',
+    game_type: '',
+  }),
 };
 
 export default GameForm;

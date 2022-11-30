@@ -3,22 +3,33 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { getGames } from '../../utils/data/gameData';
-import { createEvent } from '../../utils/data/eventData';
+import { createEvent, updateEvent } from '../../utils/data/eventData';
 
-const EventForm = ({ user }) => {
-  const [games, setGames] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState({
+const EventForm = ({ user, eventObj }) => {
+  const initialState = {
+    id: '',
     game: null,
     description: '',
     date: '',
     time: '',
     organizer: user.uid,
-  });
+  };
+  const [games, setGames] = useState([]);
+  const [currentEvent, setCurrentEvent] = useState(initialState);
   const router = useRouter();
 
   useEffect(() => {
     getGames().then(setGames);
-  }, []);
+    if (eventObj.id) {
+      setCurrentEvent({
+        id: eventObj.id,
+        game: eventObj.game,
+        description: eventObj.description,
+        date: eventObj.date,
+        time: eventObj.time,
+      });
+    }
+  }, [eventObj]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,12 +43,19 @@ const EventForm = ({ user }) => {
     e.preventDefault();
 
     const event = {
+      id: currentEvent.id,
       game: currentEvent.game,
       description: currentEvent.description,
       date: currentEvent.date,
       time: currentEvent.time,
       organizer: user.uid,
     };
+
+    if (eventObj.id) {
+      updateEvent(event, eventObj.id).then(() => router.push('/events'));
+    } else {
+      createEvent(event).then(() => router.push('/events'));
+    }
 
     createEvent(event).then(() => router.push('/events'));
   };
@@ -83,6 +101,23 @@ EventForm.propTypes = {
       displayName: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  eventObj: PropTypes.shape({
+    id: PropTypes.number,
+    game: PropTypes.string,
+    description: PropTypes.string,
+    date: PropTypes.string,
+    time: PropTypes.string,
+  }),
+};
+
+EventForm.defaultProps = {
+  eventObj: PropTypes.shape({
+    id: '',
+    game: '',
+    description: '',
+    date: '',
+    time: '',
+  }),
 };
 
 export default EventForm;
