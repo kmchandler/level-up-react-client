@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
 import Link from 'next/link';
-import deleteEvent from '../../utils/data/eventData';
+import { deleteEvent } from '../../utils/data/eventData';
 
 function EventCard({
   id,
@@ -10,12 +10,11 @@ function EventCard({
   description,
   date,
   time,
-  eventObj,
   onUpdate,
 }) {
   const deleteTheEvent = () => {
-    if (window.confirm(`Delete ${eventObj.description}?`)) {
-      deleteEvent(eventObj.id).then(() => onUpdate());
+    if (window.confirm(`Delete ${description}?`)) {
+      deleteEvent(id).then(() => onUpdate());
     }
   };
 
@@ -42,15 +41,6 @@ EventCard.propTypes = {
   description: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
-  eventObj: PropTypes.shape({
-    game: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-    id: PropTypes.number.isRequired,
-    description: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    time: PropTypes.string.isRequired,
-  }).isRequired,
   onUpdate: PropTypes.func.isRequired,
 };
 

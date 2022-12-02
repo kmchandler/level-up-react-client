@@ -36,10 +36,9 @@ const createEvent = (event) => new Promise((resolve, reject) => {
 const deleteEvent = (id) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/events/${id}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
   })
-    .then((response) => resolve(response))
-    .catch((error) => reject(error));
+    .then(resolve)
+    .catch(reject);
 });
 
 
