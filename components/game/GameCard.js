@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import deleteGame from '../../utils/data/gameData';
 
 function GameCard({
   id,
@@ -9,7 +10,13 @@ function GameCard({
   maker,
   numberOfPlayers,
   skillLevel,
+  onUpdate,
 }) {
+  const deleteTheGame = () => {
+    if (window.confirm(`Delete ${title}?`)) {
+      deleteGame(id).then(() => onUpdate());
+    }
+  };
   return (
     <Card className="text-center">
       <Card.Header>{title}</Card.Header>
@@ -21,6 +28,7 @@ function GameCard({
       <Link href={`/games/edit/${id}`} passHref>
         <Button variant="primary" className="m-2">Edit Game</Button>
       </Link>
+      <Button variant="primary" className="m-2" onClick={deleteTheGame}>Delete Game</Button>
     </Card>
   );
 }
@@ -31,6 +39,7 @@ GameCard.propTypes = {
   maker: PropTypes.string.isRequired,
   numberOfPlayers: PropTypes.number.isRequired,
   skillLevel: PropTypes.number.isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default GameCard;

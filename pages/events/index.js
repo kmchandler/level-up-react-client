@@ -25,7 +25,7 @@ function Event() {
       </Button>
       {events.map((event) => (
         <section key={`event--${event.id}`} className="event">
-          <EventCard game={event.game} description={event.description} date={event.date} time={event.time} organizer={event.organizer} id={event.id} />
+          <EventCard game={event.game} description={event.description} date={event.date} time={event.time} organizer={event.organizer} id={event.id} eventObj={event} onUpdate={getEvents} />
         </section>
       ))}
     </>
