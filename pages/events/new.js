@@ -1,3 +1,4 @@
+import React from 'react';
 import EventForm from '../../components/event/EventForm';
 import { useAuth } from '../../utils/context/authContext';
 

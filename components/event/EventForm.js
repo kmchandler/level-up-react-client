@@ -52,12 +52,11 @@ const EventForm = ({ user, eventObj }) => {
     };
 
     if (eventObj.id) {
-      updateEvent(event, eventObj.id).then(() => router.push('/events'));
+      const gameIncluded = { ...currentEvent, game_id: currentEvent.game };
+      updateEvent(gameIncluded).then(() => router.push('/events'));
     } else {
       createEvent(event).then(() => router.push('/events'));
     }
-
-    createEvent(event).then(() => router.push('/events'));
   };
 
   return (
